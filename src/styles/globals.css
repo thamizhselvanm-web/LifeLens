@@ -1,0 +1,62 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  background: #090D14;
+  color: #F3F0E8;
+  font-family: 'Switzer', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  @media (min-width: 768px) {
+    cursor: none;
+  }
+}
+
+.font-display {
+  font-family: 'Fraunces', serif;
+  font-optical-sizing: auto;
+  font-weight: 420;
+  line-height: 1.15;      /* was too tight before — more breathing room */
+  letter-spacing: -0.01em; /* slightly tightened tracking to read confident, not loose */
+}
+
+/* Grain texture overlay — sits above the background, below content */
+.grain-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
+}
+
+/* Bioluminescent Glass Panels */
+.glass-panel {
+  background: rgba(18, 26, 36, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid #243040;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+}
+
+.glass-panel-interactive {
+  background: rgba(18, 26, 36, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid #243040;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-panel-interactive:hover {
+  background: rgba(25, 36, 50, 0.85);
+  border-color: rgba(94, 234, 212, 0.3);
+  box-shadow: 0 10px 30px rgba(94, 234, 212, 0.15);
+}
+
+canvas {
+  touch-action: none;
+}
