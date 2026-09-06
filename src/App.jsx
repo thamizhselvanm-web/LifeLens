@@ -1,7 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { useLifeStore } from './store/useLifeStore'
 import FluidCursor from './components/FluidCursor'
-import SplashCursor from './components/SplashCursor'
 import ChapterTransition from './components/ChapterTransition'
 import Navigation from './components/Navigation'
 import Landing from './components/Landing'
@@ -20,16 +19,6 @@ export default function App() {
     <div className="relative min-h-screen bg-abyss text-text-warm overflow-hidden font-body selection:bg-bio-teal/30 selection:text-white">
       {/* 3% SVG Turbulence Noise Overlay */}
       <div className="grain-overlay" />
-
-      {/* WebGL Fluid Dynamics Splash Cursor with Rainbow Mode Enabled */}
-      <SplashCursor
-        RAINBOW_MODE={true}
-        SPLAT_RADIUS={0.2}
-        SPLAT_FORCE={3000}
-        DENSITY_DISSIPATION={5.5}
-        VELOCITY_DISSIPATION={2.0}
-        COLOR_UPDATE_SPEED={10}
-      />
 
       {/* Gooey Bioluminescent Fluid Cursor */}
       <FluidCursor />
