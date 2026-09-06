@@ -5,15 +5,15 @@ function SplashCursor({
   SIM_RESOLUTION = 128,
   DYE_RESOLUTION = 1024,
   CAPTURE_RESOLUTION = 512,
-  DENSITY_DISSIPATION = 5.0,
-  VELOCITY_DISSIPATION = 2.5,
+  DENSITY_DISSIPATION = 25.0,
+  VELOCITY_DISSIPATION = 3.0,
   PRESSURE = 0.1,
   PRESSURE_ITERATIONS = 20,
   CURL = 3,
-  SPLAT_RADIUS = 0.12,
-  SPLAT_FORCE = 1800,
+  SPLAT_RADIUS = 0.04,
+  SPLAT_FORCE = 1200,
   SHADING = true,
-  COLOR_UPDATE_SPEED = 10,
+  COLOR_UPDATE_SPEED = 8,
   BACK_COLOR = { r: 0, g: 0, b: 0 },
   TRANSPARENT = true,
   RAINBOW_MODE = true,
@@ -312,7 +312,7 @@ function SplashCursor({
           #endif
 
           // Translucent alpha scaling so background text is 100% legible
-          float a = max(c.r, max(c.g, c.b)) * 0.5;
+          float a = min(0.25, max(c.r, max(c.g, c.b)) * 0.3);
           gl_FragColor = vec4(c, a);
       }
     `;
@@ -875,7 +875,8 @@ function SplashCursor({
       pointer.texcoordY = 1.0 - posY / height;
       pointer.deltaX = correctDeltaX(pointer.texcoordX - pointer.prevTexcoordX);
       pointer.deltaY = correctDeltaY(pointer.texcoordY - pointer.prevTexcoordY);
-      pointer.moved = Math.abs(pointer.deltaX) > 0 || Math.abs(pointer.deltaY) > 0;
+      const dist = Math.hypot(pointer.deltaX, pointer.deltaY);
+      pointer.moved = dist > 0.0015;
       pointer.color = color;
     }
 
@@ -901,7 +902,7 @@ function SplashCursor({
       const r = parseInt(val.slice(0, 2), 16) / 255;
       const g = parseInt(val.slice(2, 4), 16) / 255;
       const b = parseInt(val.slice(4, 6), 16) / 255;
-      return { r: r * 0.2, g: g * 0.2, b: b * 0.2 };
+      return { r: r * 0.05, g: g * 0.05, b: b * 0.05 };
     }
 
     function generateColor() {
@@ -909,9 +910,9 @@ function SplashCursor({
         return hexToRGB(config.COLOR);
       }
       let c = HSVtoRGB(Math.random(), 1.0, 1.0);
-      c.r *= 0.2;
-      c.g *= 0.2;
-      c.b *= 0.2;
+      c.r *= 0.05;
+      c.g *= 0.05;
+      c.b *= 0.05;
       return c;
     }
 
