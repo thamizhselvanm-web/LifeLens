@@ -3,15 +3,15 @@ import { useEffect, useRef } from 'react';
 
 function SplashCursor({
   SIM_RESOLUTION = 128,
-  DYE_RESOLUTION = 1440,
+  DYE_RESOLUTION = 1024,
   CAPTURE_RESOLUTION = 512,
-  DENSITY_DISSIPATION = 2.5,
-  VELOCITY_DISSIPATION = 1.8,
+  DENSITY_DISSIPATION = 5.0,
+  VELOCITY_DISSIPATION = 2.5,
   PRESSURE = 0.1,
   PRESSURE_ITERATIONS = 20,
-  CURL = 4,
-  SPLAT_RADIUS = 0.35,
-  SPLAT_FORCE = 6000,
+  CURL = 3,
+  SPLAT_RADIUS = 0.12,
+  SPLAT_FORCE = 1800,
   SHADING = true,
   COLOR_UPDATE_SPEED = 10,
   BACK_COLOR = { r: 0, g: 0, b: 0 },
@@ -308,7 +308,8 @@ function SplashCursor({
               c *= diffuse;
           #endif
 
-          float a = max(c.r, max(c.g, c.b));
+          // Translucent alpha scaling so background text is 100% legible
+          float a = max(c.r, max(c.g, c.b)) * 0.5;
           gl_FragColor = vec4(c, a);
       }
     `;
@@ -813,11 +814,11 @@ function SplashCursor({
 
     function clickSplat(pointer) {
       const color = generateColor();
-      color.r *= 12.0;
-      color.g *= 12.0;
-      color.b *= 12.0;
-      let dx = 15 * (Math.random() - 0.5);
-      let dy = 35 * (Math.random() - 0.5);
+      color.r *= 1.5;
+      color.g *= 1.5;
+      color.b *= 1.5;
+      let dx = 8 * (Math.random() - 0.5);
+      let dy = 20 * (Math.random() - 0.5);
       splat(pointer.texcoordX, pointer.texcoordY, dx, dy, color);
     }
 
@@ -898,7 +899,7 @@ function SplashCursor({
       const r = parseInt(val.slice(0, 2), 16) / 255;
       const g = parseInt(val.slice(2, 4), 16) / 255;
       const b = parseInt(val.slice(4, 6), 16) / 255;
-      return { r: r * 0.85, g: g * 0.85, b: b * 0.85 };
+      return { r: r * 0.2, g: g * 0.2, b: b * 0.2 };
     }
 
     function generateColor() {
@@ -906,9 +907,9 @@ function SplashCursor({
         return hexToRGB(config.COLOR);
       }
       let c = HSVtoRGB(Math.random(), 1.0, 1.0);
-      c.r *= 0.85;
-      c.g *= 0.85;
-      c.b *= 0.85;
+      c.r *= 0.2;
+      c.g *= 0.2;
+      c.b *= 0.2;
       return c;
     }
 
@@ -1042,13 +1043,6 @@ function SplashCursor({
     window.addEventListener('touchmove', handleTouchMove, false);
     window.addEventListener('touchend', handleTouchEnd);
     window.addEventListener('resize', resizeCanvas);
-
-    // Initial splash trigger on load
-    setTimeout(() => {
-      if (isActive) {
-        splat(0.5, 0.4, 0, 80, generateColor());
-      }
-    }, 300);
 
     updateFrame();
 
