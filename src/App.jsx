@@ -24,11 +24,11 @@ export default function App() {
       {/* WebGL Fluid Dynamics Splash Cursor with Rainbow Mode Enabled */}
       <SplashCursor
         RAINBOW_MODE={true}
-        SPLAT_RADIUS={0.04}
-        SPLAT_FORCE={1200}
-        DENSITY_DISSIPATION={25.0}
-        VELOCITY_DISSIPATION={3.0}
-        COLOR_UPDATE_SPEED={8}
+        SPLAT_RADIUS={0.2}
+        SPLAT_FORCE={3000}
+        DENSITY_DISSIPATION={5.5}
+        VELOCITY_DISSIPATION={2.0}
+        COLOR_UPDATE_SPEED={10}
       />
 
       {/* Gooey Bioluminescent Fluid Cursor */}
