@@ -88,18 +88,19 @@ function SplashCursor({
       let supportLinearFiltering;
       if (isWebGL2) {
         gl.getExtension('EXT_color_buffer_float');
-        supportLinearFiltering = gl.getExtension('OES_texture_float_linear');
+        gl.getExtension('EXT_color_buffer_half_float');
+        supportLinearFiltering = gl.getExtension('OES_texture_float_linear') || gl.getExtension('OES_texture_half_float_linear');
       } else {
         halfFloat = gl.getExtension('OES_texture_half_float');
-        supportLinearFiltering = gl.getExtension('OES_texture_half_float_linear');
+        supportLinearFiltering = gl.getExtension('OES_texture_half_float_linear') || gl.getExtension('OES_texture_float_linear');
       }
       gl.clearColor(0.0, 0.0, 0.0, 0.0);
 
       const halfFloatTexType = isWebGL2 ? gl.HALF_FLOAT : halfFloat ? halfFloat.HALF_FLOAT_OES : gl.UNSIGNED_BYTE;
       
-      let formatRGBA = getSupportedFormat(gl, isWebGL2 ? gl.RGBA16F : gl.RGBA, gl.RGBA, halfFloatTexType) || { internalFormat: gl.RGBA, format: gl.RGBA };
-      let formatRG = getSupportedFormat(gl, isWebGL2 ? gl.RG16F : gl.RGBA, isWebGL2 ? gl.RG : gl.RGBA, halfFloatTexType) || { internalFormat: gl.RGBA, format: gl.RGBA };
-      let formatR = getSupportedFormat(gl, isWebGL2 ? gl.R16F : gl.RGBA, isWebGL2 ? gl.RED : gl.RGBA, halfFloatTexType) || { internalFormat: gl.RGBA, format: gl.RGBA };
+      let formatRGBA = getSupportedFormat(gl, isWebGL2 ? gl.RGBA16F : gl.RGBA, gl.RGBA, halfFloatTexType) || { internalFormat: gl.RGBA, format: gl.RGBA, type: gl.UNSIGNED_BYTE };
+      let formatRG = getSupportedFormat(gl, isWebGL2 ? gl.RG16F : gl.RGBA, isWebGL2 ? gl.RG : gl.RGBA, halfFloatTexType) || { internalFormat: gl.RGBA, format: gl.RGBA, type: gl.UNSIGNED_BYTE };
+      let formatR = getSupportedFormat(gl, isWebGL2 ? gl.R16F : gl.RGBA, isWebGL2 ? gl.RED : gl.RGBA, halfFloatTexType) || { internalFormat: gl.RGBA, format: gl.RGBA, type: gl.UNSIGNED_BYTE };
 
       return {
         gl,
@@ -121,10 +122,10 @@ function SplashCursor({
           case gl.RG16F:
             return getSupportedFormat(gl, gl.RGBA16F, gl.RGBA, type);
           default:
-            return { internalFormat: gl.RGBA, format: gl.RGBA };
+            return { internalFormat: gl.RGBA, format: gl.RGBA, type: gl.UNSIGNED_BYTE };
         }
       }
-      return { internalFormat, format };
+      return { internalFormat, format, type };
     }
 
     function supportRenderTextureFormat(gl, internalFormat, format, type) {
@@ -140,6 +141,8 @@ function SplashCursor({
         gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
         gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture, 0);
         const status = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
+        gl.deleteTexture(texture);
+        gl.deleteFramebuffer(fbo);
         return status === gl.FRAMEBUFFER_COMPLETE;
       } catch (err) {
         return false;
@@ -555,7 +558,6 @@ function SplashCursor({
     function initFramebuffers() {
       let simRes = getResolution(config.SIM_RESOLUTION);
       let dyeRes = getResolution(config.DYE_RESOLUTION);
-      const texType = ext.halfFloatTexType;
       const rgba = ext.formatRGBA;
       const rg = ext.formatRG;
       const r = ext.formatR;
@@ -563,12 +565,12 @@ function SplashCursor({
       gl.disable(gl.BLEND);
 
       if (!dye)
-        dye = createDoubleFBO(dyeRes.width, dyeRes.height, rgba.internalFormat, rgba.format, texType, filtering);
+        dye = createDoubleFBO(dyeRes.width, dyeRes.height, rgba.internalFormat, rgba.format, rgba.type, filtering);
       else
-        dye = resizeDoubleFBO(dye, dyeRes.width, dyeRes.height, rgba.internalFormat, rgba.format, texType, filtering);
+        dye = resizeDoubleFBO(dye, dyeRes.width, dyeRes.height, rgba.internalFormat, rgba.format, rgba.type, filtering);
 
       if (!velocity)
-        velocity = createDoubleFBO(simRes.width, simRes.height, rg.internalFormat, rg.format, texType, filtering);
+        velocity = createDoubleFBO(simRes.width, simRes.height, rg.internalFormat, rg.format, rg.type, filtering);
       else
         velocity = resizeDoubleFBO(
           velocity,
@@ -576,13 +578,13 @@ function SplashCursor({
           simRes.height,
           rg.internalFormat,
           rg.format,
-          texType,
+          rg.type,
           filtering
         );
 
-      divergence = createFBO(simRes.width, simRes.height, r.internalFormat, r.format, texType, gl.NEAREST);
-      curl = createFBO(simRes.width, simRes.height, r.internalFormat, r.format, texType, gl.NEAREST);
-      pressure = createDoubleFBO(simRes.width, simRes.height, r.internalFormat, r.format, texType, gl.NEAREST);
+      divergence = createFBO(simRes.width, simRes.height, r.internalFormat, r.format, r.type, gl.NEAREST);
+      curl = createFBO(simRes.width, simRes.height, r.internalFormat, r.format, r.type, gl.NEAREST);
+      pressure = createDoubleFBO(simRes.width, simRes.height, r.internalFormat, r.format, r.type, gl.NEAREST);
     }
 
     function createFBO(w, h, internalFormat, format, type, param) {
@@ -968,8 +970,12 @@ function SplashCursor({
       if (aspectRatio < 1) aspectRatio = 1.0 / aspectRatio;
       const min = Math.round(resolution);
       const max = Math.round(resolution * aspectRatio);
-      if (gl.drawingBufferWidth > gl.drawingBufferHeight) return { width: max, height: min };
-      else return { width: min, height: max };
+      const maxTexSize = gl.getParameter(gl.MAX_TEXTURE_SIZE) || 4096;
+      let w = gl.drawingBufferWidth > gl.drawingBufferHeight ? max : min;
+      let h = gl.drawingBufferWidth > gl.drawingBufferHeight ? min : max;
+      w = Math.min(w, maxTexSize);
+      h = Math.min(h, maxTexSize);
+      return { width: w, height: h };
     }
 
     function scaleByPixelRatio(input) {
@@ -1005,7 +1011,13 @@ function SplashCursor({
         updatePointerMoveData(pointer, posX, posY, color);
         firstMouseMoveHandled = true;
       } else {
-        updatePointerMoveData(pointer, posX, posY, pointer.color);
+        updatePointerMoveData(pointer, posX, posY, pointer.color || generateColor());
+      }
+    }
+
+    function handlePointerMove(e) {
+      if (e.pointerType === 'mouse' || e.pointerType === 'touch' || e.pointerType === 'pen') {
+        handleMouseMove(e);
       }
     }
 
@@ -1025,7 +1037,7 @@ function SplashCursor({
       for (let i = 0; i < touches.length; i++) {
         let posX = touches[i].clientX;
         let posY = touches[i].clientY;
-        updatePointerMoveData(pointer, posX, posY, pointer.color);
+        updatePointerMoveData(pointer, posX, posY, pointer.color || generateColor());
       }
     }
 
@@ -1038,9 +1050,10 @@ function SplashCursor({
     }
 
     window.addEventListener('mousedown', handleMouseDown);
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('touchstart', handleTouchStart);
-    window.addEventListener('touchmove', handleTouchMove, false);
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    window.addEventListener('pointermove', handlePointerMove, { passive: true });
+    window.addEventListener('touchstart', handleTouchStart, { passive: true });
+    window.addEventListener('touchmove', handleTouchMove, { passive: true });
     window.addEventListener('touchend', handleTouchEnd);
     window.addEventListener('resize', resizeCanvas);
 
@@ -1056,6 +1069,7 @@ function SplashCursor({
 
       window.removeEventListener('mousedown', handleMouseDown);
       window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('pointermove', handlePointerMove);
       window.removeEventListener('touchstart', handleTouchStart);
       window.removeEventListener('touchmove', handleTouchMove);
       window.removeEventListener('touchend', handleTouchEnd);
