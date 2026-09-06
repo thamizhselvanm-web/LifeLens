@@ -1015,12 +1015,6 @@ function SplashCursor({
       }
     }
 
-    function handlePointerMove(e) {
-      if (e.pointerType === 'mouse' || e.pointerType === 'touch' || e.pointerType === 'pen') {
-        handleMouseMove(e);
-      }
-    }
-
     function handleTouchStart(e) {
       const touches = e.targetTouches;
       let pointer = pointers[0];
@@ -1051,7 +1045,6 @@ function SplashCursor({
 
     window.addEventListener('mousedown', handleMouseDown);
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
-    window.addEventListener('pointermove', handlePointerMove, { passive: true });
     window.addEventListener('touchstart', handleTouchStart, { passive: true });
     window.addEventListener('touchmove', handleTouchMove, { passive: true });
     window.addEventListener('touchend', handleTouchEnd);
@@ -1069,7 +1062,6 @@ function SplashCursor({
 
       window.removeEventListener('mousedown', handleMouseDown);
       window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('pointermove', handlePointerMove);
       window.removeEventListener('touchstart', handleTouchStart);
       window.removeEventListener('touchmove', handleTouchMove);
       window.removeEventListener('touchend', handleTouchEnd);
