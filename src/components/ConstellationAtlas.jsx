@@ -1,8 +1,8 @@
 import { useState, useRef, useMemo } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
-import { OrbitControls, Html, Line } from '@react-three/drei'
+import { OrbitControls, Html, Line, Sparkles } from '@react-three/drei'
 import { EffectComposer, Bloom } from '@react-three/postprocessing'
-import { Sparkles, X, Star, ArrowLeft, ArrowRight } from 'lucide-react'
+import { X, Star, ArrowLeft, ArrowRight } from 'lucide-react'
 import { useLifeStore } from '../store/useLifeStore'
 
 const CATEGORY_COLORS = {
