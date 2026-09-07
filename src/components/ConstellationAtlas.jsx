@@ -2,15 +2,15 @@ import { useState, useRef, useMemo } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { OrbitControls, Html, Line } from '@react-three/drei'
 import { EffectComposer, Bloom } from '@react-three/postprocessing'
-import { Sparkles, X, Star, Filter, ArrowLeft, ArrowRight, Zap, Layers } from 'lucide-react'
+import { Sparkles, X, Star, ArrowLeft, ArrowRight } from 'lucide-react'
 import { useLifeStore } from '../store/useLifeStore'
 
 const CATEGORY_COLORS = {
   Focus: { main: '#5EEAD4', glow: 'rgba(94, 234, 212, 0.6)', label: 'Cognitive Depth' },
   Digital: { main: '#38BDF8', glow: 'rgba(56, 189, 248, 0.6)', label: 'Information Orbit' },
-  Vitality: { main: '#4ADE80', glow: 'rgba(74, 222, 128, 0.6)', label: 'Biometric Core' },
-  Learning: { main: '#F0B86E', glow: 'rgba(240, 184, 110, 0.6)', label: 'Intellectual Spark' },
-  Goals: { main: '#FB7185', glow: 'rgba(251, 113, 133, 0.6)', label: 'Horizon Vector' },
+  Vitality: { main: '#4ADE80', glow: 'rgba(74, 222, 128, 0.6)', label: 'Biometric Health' },
+  Learning: { main: '#F0B86E', glow: 'rgba(240, 184, 110, 0.6)', label: 'Intellectual Growth' },
+  Goals: { main: '#FB7185', glow: 'rgba(251, 113, 133, 0.6)', label: 'Strategic Horizon' },
   Balance: { main: '#C084FC', glow: 'rgba(192, 132, 252, 0.6)', label: 'Life Harmony' }
 }
 
@@ -28,7 +28,7 @@ function StarNode({ star, onSelect, isSelected, isFilteredOut }) {
   const catInfo = CATEGORY_COLORS[star.category] || CATEGORY_COLORS.Focus
   const color = catInfo.main
 
-  const opacity = isFilteredOut ? 0.15 : 1.0
+  const opacity = isFilteredOut ? 0.12 : 1.0
   const scale = isSelected ? 1.6 : hovered ? 1.4 : 1.0
 
   return (
@@ -47,29 +47,30 @@ function StarNode({ star, onSelect, isSelected, isFilteredOut }) {
         <meshStandardMaterial
           color={color}
           emissive={color}
-          emissiveIntensity={isSelected ? 3.0 : hovered ? 2.2 : 1.4}
+          emissiveIntensity={isSelected ? 3.2 : hovered ? 2.4 : 1.4}
           transparent
           opacity={opacity}
         />
       </mesh>
 
-      {/* HTML Label on 3D Star Node */}
-      {!isFilteredOut && (
+      {/* HTML Tooltip Badge on Hover or Selection */}
+      {!isFilteredOut && (hovered || isSelected) && (
         <Html distanceFactor={14} position={[0, 0.65, 0]} center zIndexRange={[100, 0]}>
           <div
             onClick={(e) => {
               e.stopPropagation()
               onSelect(star)
             }}
-            className={`px-2.5 py-1 rounded-lg text-[11px] font-mono whitespace-nowrap transition-all cursor-pointer pointer-events-auto select-none ${
+            className={`px-3 py-1.5 rounded-xl text-xs font-sans whitespace-nowrap transition-all cursor-pointer pointer-events-auto select-none ${
               isSelected
-                ? 'bg-bio-teal text-abyss font-bold shadow-[0_0_15px_rgba(94,234,212,0.8)] scale-110'
-                : hovered
-                ? 'bg-panel/90 text-white border border-bio-teal/50 shadow-lg scale-105'
-                : 'bg-abyss/80 text-text-warm/80 border border-white/10 backdrop-blur-md'
+                ? 'bg-bio-teal text-abyss font-bold shadow-[0_0_16px_rgba(94,234,212,0.8)] scale-110'
+                : 'bg-panel/95 text-white border border-bio-teal/50 shadow-xl backdrop-blur-xl'
             }`}
           >
-            {star.name}
+            <div className="flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full" style={{ backgroundColor: color }} />
+              <span>{star.name}</span>
+            </div>
           </div>
         </Html>
       )}
@@ -87,7 +88,7 @@ function ConstellationScene({ stars, selectedStar, setSelectedStar, activeCatego
       <pointLight position={[10, 10, 10]} intensity={1.0} color="#38BDF8" />
 
       {/* Background Deep Space Particles */}
-      <Sparkles count={120} scale={20} size={2} speed={0.4} color="#5EEAD4" opacity={0.5} />
+      <Sparkles count={120} scale={22} size={2} speed={0.4} color="#5EEAD4" opacity={0.5} />
 
       {/* Render Star Nodes */}
       {stars.map((star) => {
@@ -111,7 +112,6 @@ function ConstellationScene({ stars, selectedStar, setSelectedStar, activeCatego
         const isFilteredOut = activeCategory !== 'All' && activeCategory !== cat
         if (isFilteredOut) return null
 
-        // Connect points in spatial sequence
         const linePoints = catStars.map((s) => s.pos)
         const lineColor = CATEGORY_COLORS[cat]?.main || '#5EEAD4'
 
@@ -161,62 +161,67 @@ export default function ConstellationAtlas() {
   return (
     <div className="relative w-full h-screen bg-abyss text-text-warm overflow-hidden selection:bg-bio-teal/30">
       {/* 3D WebGL Canvas */}
-      <Canvas camera={{ position: [0, 0, 15], fov: 45 }}>
-        <color attach="background" args={['#090D14']} />
-        <ConstellationScene
-          stars={stars}
-          selectedStar={selectedStar}
-          setSelectedStar={setSelectedStar}
-          activeCategory={activeCategory}
-        />
-      </Canvas>
+      <div className="absolute inset-0 z-0">
+        <Canvas camera={{ position: [0, 0, 15], fov: 45 }}>
+          <color attach="background" args={['#090D14']} />
+          <ConstellationScene
+            stars={stars}
+            selectedStar={selectedStar}
+            setSelectedStar={setSelectedStar}
+            activeCategory={activeCategory}
+          />
+        </Canvas>
+      </div>
 
-      {/* Header Overlay - Positioned safely below Navigation bar */}
-      <header className="absolute top-20 sm:top-24 left-6 sm:left-10 z-20 pointer-events-auto max-w-lg">
-        <span className="text-xs font-mono tracking-widest text-bio-teal/90 uppercase block mb-1 drop-shadow-[0_0_6px_rgba(94,234,212,0.4)]">
-          CHAPTER 4 OF 5 — CONSTELLATION ATLAS
-        </span>
-        <h1 className="text-3xl sm:text-4xl font-serif text-text-warm tracking-tight">
-          Living Signal Sky
-        </h1>
-        <p className="text-xs text-text-warm/70 font-sans mt-1.5 leading-relaxed">
-          Interactive celestial map linking your verified achievements into bioluminescent domain constellations.
-        </p>
+      {/* Glassmorphic Top Header Bar - Positioned cleanly below Navigation bar with padding */}
+      <header className="absolute top-[84px] sm:top-[76px] left-4 sm:left-8 right-4 sm:right-8 z-20 pointer-events-auto">
+        <div className="glass-panel px-6 py-4 rounded-2xl border border-bio-teal/20 backdrop-blur-2xl flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="text-[11px] font-mono tracking-widest text-bio-teal uppercase drop-shadow-[0_0_6px_rgba(94,234,212,0.4)]">
+                CHAPTER 4 OF 5 — CONSTELLATION ATLAS
+              </span>
+            </div>
+            <h1 className="text-xl sm:text-2xl font-serif text-text-warm tracking-tight mt-0.5">
+              Personal Signal Sky
+            </h1>
+          </div>
 
-        {/* Category Filter Pills */}
-        <div className="mt-4 flex flex-wrap gap-1.5">
-          {categories.map((cat) => {
-            const isActive = activeCategory === cat
-            const catColor = CATEGORY_COLORS[cat]?.main || '#5EEAD4'
-            return (
-              <button
-                key={cat}
-                onClick={() => setActiveCategory(cat)}
-                className={`px-2.5 py-1 rounded-full text-xs font-mono transition-all ${
-                  isActive
-                    ? 'bg-bio-teal text-abyss font-bold shadow-[0_0_12px_rgba(94,234,212,0.5)]'
-                    : 'bg-panel/70 border border-line text-text-warm/60 hover:text-text-warm hover:border-bio-teal/40'
-                }`}
-                style={isActive && cat !== 'All' ? { backgroundColor: catColor, color: '#090D14' } : {}}
-              >
-                {cat}
-              </button>
-            )
-          })}
+          {/* Domain Filter Pills */}
+          <div className="flex flex-wrap items-center gap-1.5">
+            {categories.map((cat) => {
+              const isActive = activeCategory === cat
+              const catColor = CATEGORY_COLORS[cat]?.main || '#5EEAD4'
+              return (
+                <button
+                  key={cat}
+                  onClick={() => setActiveCategory(cat)}
+                  className={`px-3 py-1 rounded-full text-xs font-body transition-all ${
+                    isActive
+                      ? 'bg-bio-teal text-abyss font-semibold shadow-[0_0_12px_rgba(94,234,212,0.5)]'
+                      : 'bg-abyss/60 border border-line/60 text-text-warm/70 hover:text-text-warm hover:border-bio-teal/40'
+                  }`}
+                  style={isActive && cat !== 'All' ? { backgroundColor: catColor, color: '#090D14' } : {}}
+                >
+                  {cat}
+                </button>
+              )
+            })}
+          </div>
         </div>
       </header>
 
-      {/* Selected Star Details Sidebar Panel - Positioned top right below nav */}
+      {/* Selected Star Details Card - Positioned in bottom-right viewport */}
       {selectedStar && (
-        <div className="absolute top-20 sm:top-24 right-6 sm:right-10 z-30 w-full max-w-sm glass-panel p-6 rounded-2xl border border-bio-teal/30 shadow-[0_0_40px_rgba(94,234,212,0.15)] pointer-events-auto animate-in fade-in slide-in-from-top-4 duration-300">
-          <div className="flex items-center justify-between border-b border-line/60 pb-3 mb-4">
+        <div className="absolute bottom-20 right-4 sm:right-8 z-30 w-full max-w-sm glass-panel p-6 rounded-2xl border border-bio-teal/30 shadow-[0_0_40px_rgba(94,234,212,0.15)] pointer-events-auto animate-in fade-in slide-in-from-bottom-4 duration-300">
+          <div className="flex items-center justify-between border-b border-line/60 pb-3 mb-3">
             <div className="flex items-center gap-2">
               <span
                 className="w-3 h-3 rounded-full shadow-md"
                 style={{ backgroundColor: CATEGORY_COLORS[selectedStar.category]?.main || '#5EEAD4' }}
               />
               <span className="text-xs font-mono text-bio-teal uppercase tracking-wider">
-                {selectedStar.category} STAR
+                {CATEGORY_COLORS[selectedStar.category]?.label || selectedStar.category}
               </span>
             </div>
             <button
@@ -227,9 +232,9 @@ export default function ConstellationAtlas() {
             </button>
           </div>
 
-          <h3 className="text-xl font-serif text-text-warm leading-snug">{selectedStar.name}</h3>
+          <h3 className="text-lg font-serif text-text-warm leading-snug">{selectedStar.name}</h3>
 
-          <div className="mt-2 text-xs text-text-warm/60 font-mono">
+          <div className="mt-1 text-xs text-text-warm/60 font-body">
             Logged: <span className="text-text-warm/90">{selectedStar.date}</span>
           </div>
 
@@ -239,9 +244,9 @@ export default function ConstellationAtlas() {
             </p>
           )}
 
-          {/* Impact Metric Badge & Progress */}
+          {/* Impact Metric Badge & Progress Bar */}
           <div className="mt-4 pt-3 border-t border-line/40 flex items-center justify-between">
-            <span className="text-xs text-text-warm/60 font-sans">Signal Velocity:</span>
+            <span className="text-xs text-text-warm/60 font-sans">Signal Impact:</span>
             <span className="text-xs font-mono font-bold text-bio-teal bg-bio-teal/10 px-2.5 py-1 rounded-md border border-bio-teal/30">
               {selectedStar.impact || `+${selectedStar.val}% Index`}
             </span>
@@ -259,8 +264,8 @@ export default function ConstellationAtlas() {
         </div>
       )}
 
-      {/* Chapter Navigation Footer - Positioned safely at bottom */}
-      <footer className="absolute bottom-6 left-6 sm:left-10 right-6 sm:right-10 z-20 flex flex-wrap justify-between items-center pointer-events-auto gap-4">
+      {/* Chapter Navigation Footer Bar */}
+      <footer className="absolute bottom-5 left-4 sm:left-8 right-4 sm:right-8 z-20 flex flex-wrap justify-between items-center pointer-events-auto gap-4">
         <button
           onClick={() => setChapter(3)}
           className="text-xs font-body text-text-warm/60 hover:text-bio-teal transition-colors flex items-center gap-2"
@@ -270,7 +275,7 @@ export default function ConstellationAtlas() {
         </button>
 
         <div className="text-xs font-mono text-text-warm/40 hidden md:block">
-          Showing {filteredStarsCount} of {stars.length} Constellation Nodes
+          Showing {filteredStarsCount} of {stars.length} Constellation Nodes • Click any star node to inspect
         </div>
 
         <button

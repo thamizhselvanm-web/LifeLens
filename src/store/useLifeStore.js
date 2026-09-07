@@ -36,84 +36,84 @@ export const useLifeStore = create((set, get) => ({
   // Chapter Transition Banner
   transitioningChapter: null, // Holds chapter object during transition
 
-  // Chapter 3: Signal Log Entries
+  // Chapter 3: Signal Log Entries (Authentic Human Life Signals)
   signalLogs: [
     {
       id: 'log-1',
       date: 'Yesterday, 10:45 PM',
       category: 'Focus Engine',
-      title: 'Deep Architecture Block',
-      summary: 'Completed 3 uninterrupted hours of WebGL shader optimizations with zero context switching.',
-      impact: '+12% Focus Depth',
+      title: '3-Hour Deep Writing Session',
+      summary: 'Completed 3 uninterrupted hours of creative writing with zero digital distractions or phone pickups.',
+      impact: '+14% Cognitive Depth',
       tag: 'focus'
     },
     {
       id: 'log-2',
       date: '2 days ago',
       category: 'Digital Orbit',
-      title: 'Screen Quiet Window',
-      summary: 'Maintained 90 minutes of digital sunset prior to sleep cycle. HRV recovery peaked.',
-      impact: '-18% Digital Noise',
+      title: '90-Minute Screen Sunset',
+      summary: 'Turned off all digital screens 90 minutes before sleep. Read physical paperback book instead.',
+      impact: '-20% Screen Fatigue',
       tag: 'digital'
     },
     {
       id: 'log-3',
       date: '3 days ago',
       category: 'Knowledge Spark',
-      title: 'Quantum Mental Model Synthesis',
-      summary: 'Synthesized non-linear dynamics into 4 personal mental model notes.',
-      impact: '+15% Learning Compounding',
+      title: 'Mental Model & Reading Synthesis',
+      summary: 'Finished reading chapter on complex systems and synthesized 4 actionable life mental model notes.',
+      impact: '+16% Retention Velocity',
       tag: 'learning'
     },
     {
       id: 'log-4',
       date: '4 days ago',
       category: 'Vitality Core',
-      title: 'Circadian Sunlight Exposure',
-      summary: 'Morning 20-minute sunlight walk stabilized circadian rhythm baseline.',
-      impact: '+10% Vitality Equilibrium',
+      title: 'Morning Sunlight & Hydration',
+      summary: 'Walked 25 minutes in early morning sunlight right after waking to anchor circadian rhythm.',
+      impact: '+12% Sleep Recovery',
       tag: 'health'
     },
     {
       id: 'log-5',
       date: '5 days ago',
       category: 'Horizon Vector',
-      title: 'OKR Milestone Sprint',
-      summary: 'Pushed quarterly engineering deliverable to 80% completion status.',
-      impact: '+14% Strategic Velocity',
+      title: 'Weekly Priority Alignment',
+      summary: 'Reviewed quarterly life targets and completed top 3 strategic priorities ahead of deadline.',
+      impact: '+15% Goal Execution',
       tag: 'goals'
     }
   ],
 
-  // Chapter 4: Constellation Stars (Legitimate Signal Dataset across 6 Life Domains)
+  // Chapter 4: Constellation Stars (Authentic Human Life Signals across 6 Domains)
   constellationStars: [
-    // Focus Constellation (Teal / Cognitive Depth)
-    { id: 'star-1', name: 'Deep Architecture Block', category: 'Focus', val: 92, pos: [-4.2, 3.5, -1.8], date: 'Yesterday, 10:45 PM', summary: '3 uninterrupted hours of WebGL shader optimizations with zero context switching.', impact: '+12% Focus Depth' },
-    { id: 'star-2', name: 'Ultradian Sprint Alpha', category: 'Focus', val: 88, pos: [-2.8, 4.8, -0.6], date: 'Sep 05, 2026', summary: 'Executed 90m deep work block with noise-canceling bio-acoustics.', impact: '+15% Attention Resilience' },
-    { id: 'star-3', name: 'Single-Thread Execution', category: 'Focus', val: 84, pos: [-1.2, 3.2, -2.4], date: 'Sep 03, 2026', summary: 'Zero tab-switching during core system state machine refactoring.', impact: '+8% Cognitive Flow' },
+    // Focus Constellation (Cognitive Depth)
+    { id: 'star-1', name: '3-Hour Deep Writing', category: 'Focus', val: 92, pos: [-4.2, 3.5, -1.8], date: 'Yesterday, 10:45 PM', summary: '3 uninterrupted hours of creative writing with zero digital distractions or phone pickups.', impact: '+14% Cognitive Depth' },
+    { id: 'star-2', name: 'Uninterrupted Reading Sprint', category: 'Focus', val: 88, pos: [-2.8, 4.8, -0.6], date: 'Sep 05, 2026', summary: 'Focused 90-minute deep reading session with ambient instrumental focus music.', impact: '+15% Attention Resilience' },
+    { id: 'star-3', name: 'Single-Task Flow State', category: 'Focus', val: 84, pos: [-1.2, 3.2, -2.4], date: 'Sep 03, 2026', summary: 'Zero context-switching during 2-hour strategic problem-solving session.', impact: '+10% Focus Efficiency' },
     
-    // Digital Constellation (Cyan / Information Orbit)
-    { id: 'star-4', name: 'Screen Quiet Window', category: 'Digital', val: 82, pos: [3.8, 3.2, -2.5], date: '2 days ago', summary: 'Maintained 90 minutes of digital sunset prior to sleep cycle.', impact: '-18% Digital Noise' },
-    { id: 'star-5', name: 'Grayscale Focus Protocol', category: 'Digital', val: 78, pos: [4.6, 1.8, -1.2], date: 'Sep 04, 2026', summary: 'Limited mobile notifications to urgent biometric alerts only.', impact: '-22% Context Interruptions' },
-    { id: 'star-6', name: 'Information Sunset', category: 'Digital', val: 86, pos: [2.5, 4.5, -3.1], date: 'Sep 02, 2026', summary: 'Replaced late-night feed scrolling with paper journal reflection.', impact: '+14% HRV Sleep Recovery' },
+    // Digital Constellation (Information Orbit)
+    { id: 'star-4', name: '90-Min Screen Sunset', category: 'Digital', val: 82, pos: [3.8, 3.2, -2.5], date: '2 days ago', summary: 'Turned off all digital screens 90 minutes before sleep. Read physical paperback book.', impact: '-20% Screen Fatigue' },
+    { id: 'star-5', name: 'App Notification Fast', category: 'Digital', val: 78, pos: [4.6, 1.8, -1.2], date: 'Sep 04, 2026', summary: 'Silenced all non-essential phone notifications for 24 continuous hours.', impact: '-25% Attention Fragmentation' },
+    { id: 'star-6', name: 'Weekend Digital Quiet', category: 'Digital', val: 86, pos: [2.5, 4.5, -3.1], date: 'Sep 02, 2026', summary: 'Replaced social media feed scrolling with outdoor park walking and reflection.', impact: '+18% Mental Quietude' },
 
-    // Vitality Constellation (Green / Biometric Equilibrium)
-    { id: 'star-7', name: 'Circadian Sunlight Walk', category: 'Vitality', val: 90, pos: [-1.5, -3.2, 2.5], date: '4 days ago', summary: 'Morning 20-minute sunlight walk stabilized circadian rhythm baseline.', impact: '+10% Vitality Equilibrium' },
-    { id: 'star-8', name: 'Zone-2 Aerobic Pulse', category: 'Vitality', val: 85, pos: [0.8, -4.6, 1.8], date: 'Sep 04, 2026', summary: 'Completed 45m steady-state cardio at 135 bpm target heart rate.', impact: '+16% Metabolic Stamina' },
-    { id: 'star-9', name: 'Deep Sleep HRV Peak', category: 'Vitality', val: 94, pos: [-2.6, -4.1, 3.2], date: 'Sep 01, 2026', summary: 'Achieved 2.2 hrs REM sleep with 68ms average HRV recovery.', impact: '+20% Cell Recovery' },
+    // Vitality Constellation (Biometric Health)
+    { id: 'star-7', name: 'Morning Sunlight Walk', category: 'Vitality', val: 90, pos: [-1.5, -3.2, 2.5], date: '4 days ago', summary: 'Walked 25 minutes in early morning sunlight right after waking to anchor circadian rhythm.', impact: '+12% Sleep Recovery' },
+    { id: 'star-8', name: '10k Fitness Step Streak', category: 'Vitality', val: 85, pos: [0.8, -4.6, 1.8], date: 'Sep 04, 2026', summary: 'Completed 10,500 daily steps including 30 minutes of zone-2 aerobic walking.', impact: '+16% Metabolic Vitality' },
+    { id: 'star-9', name: '8-Hour Restful Sleep', category: 'Vitality', val: 94, pos: [-2.6, -4.1, 3.2], date: 'Sep 01, 2026', summary: 'Achieved 8 hours of uninterrupted deep restorative sleep with high HRV recovery.', impact: '+22% Recovery Index' },
 
-    // Learning Constellation (Amber / Intellectual Expansion)
-    { id: 'star-10', name: 'Quantum Mental Model Synthesis', category: 'Learning', val: 89, pos: [3.2, -2.4, -3.5], date: '3 days ago', summary: 'Synthesized non-linear dynamics into 4 personal mental model notes.', impact: '+15% Learning Compounding' },
-    { id: 'star-11', name: 'Shader Masterclass Sprint', category: 'Learning', val: 86, pos: [4.5, -3.8, -1.9], date: 'Sep 03, 2026', summary: 'Mastered 3D raymarching shaders and noise distortion mathematics.', impact: '+18% Technical Skill' },
-    { id: 'star-12', name: 'Spaced Repetition Review', category: 'Learning', val: 80, pos: [1.8, -5.2, -2.8], date: 'Sep 02, 2026', summary: 'Reviewed 45 architectural pattern flashcards with 95% retention.', impact: '+11% Knowledge Recall' },
+    // Learning Constellation (Intellectual Expansion)
+    { id: 'star-10', name: 'Mental Model Synthesis', category: 'Learning', val: 89, pos: [3.2, -2.4, -3.5], date: '3 days ago', summary: 'Finished reading chapter on complex systems and synthesized 4 actionable mental model notes.', impact: '+16% Retention Velocity' },
+    { id: 'star-11', name: 'Language Vocab Sprint', category: 'Learning', val: 86, pos: [4.5, -3.8, -1.9], date: 'Sep 03, 2026', summary: 'Mastered 30 new conversational vocabulary phrases with 95% retention rate.', impact: '+14% Learning Compounding' },
+    { id: 'star-12', name: 'Philosophy Book Notes', category: 'Learning', val: 80, pos: [1.8, -5.2, -2.8], date: 'Sep 02, 2026', summary: 'Wrote personal reflection notes on stoic philosophy and daily discipline.', impact: '+12% Perspective Depth' },
 
-    // Goals Constellation (Coral / Strategic Horizon)
-    { id: 'star-13', name: 'OKR Milestone Sprint', category: 'Goals', val: 91, pos: [-3.8, -1.8, 3.8], date: '5 days ago', summary: 'Pushed quarterly engineering deliverable to 80% completion status.', impact: '+14% Strategic Velocity' },
-    { id: 'star-14', name: 'Strategic Backlog Pruning', category: 'Goals', val: 83, pos: [-4.9, -3.1, 2.1], date: 'Sep 03, 2026', summary: 'Eliminated low-impact micro tasks to protect core roadmap velocity.', impact: '+25% Priority Clarity' },
+    // Goals Constellation (Strategic Horizon)
+    { id: 'star-13', name: 'Weekly Target Execution', category: 'Goals', val: 91, pos: [-3.8, -1.8, 3.8], date: '5 days ago', summary: 'Reviewed quarterly life targets and completed top 3 strategic priorities ahead of deadline.', impact: '+15% Goal Execution' },
+    { id: 'star-14', name: 'Life Planning Review', category: 'Goals', val: 83, pos: [-4.9, -3.1, 2.1], date: 'Sep 03, 2026', summary: 'Organized quarterly milestones and pruned low-priority commitments.', impact: '+20% Strategic Clarity' },
 
-    // Harmony Constellation (Purple / Life Integration)
-    { id: 'star-15', name: 'Restorative Solitude Window', category: 'Balance', val: 87, pos: [0.2, 2.1, 4.2], date: 'Yesterday', summary: 'Spent 2 hours in screen-free nature immersion without device alerts.', impact: '+18% Grounding Score' },
-    { id: 'star-16', name: 'Social Vitality Synergy', category: 'Balance', val: 85, pos: [1.9, 0.8, 3.6], date: 'Sep 04, 2026', summary: 'High-bandwidth evening conversation with close peer network.', impact: '+15% Emotional Equilibrium' }
+    // Harmony Constellation (Life Integration)
+    { id: 'star-15', name: 'Sunset Nature Walk', category: 'Balance', val: 87, pos: [0.2, 2.1, 4.2], date: 'Yesterday', summary: 'Spent 90 minutes outdoors in nature observing the sunset without phone interruptions.', impact: '+18% Grounding & Peace' },
+    { id: 'star-16', name: 'Family & Friend Dinner', category: 'Balance', val: 85, pos: [1.9, 0.8, 3.6], date: 'Sep 04, 2026', summary: 'Enjoyed meaningful screen-free dinner conversation with close friends.', impact: '+15% Emotional Connection' }
   ],
 
   // Actions
